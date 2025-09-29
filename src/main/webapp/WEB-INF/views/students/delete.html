@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: content">
+<head>
+    <title>Xóa sinh viên</title>
+</head>
+<body>
+<h2>Xác nhận xóa sinh viên</h2>
+
+<div class="alert alert-warning">
+    Bạn có chắc chắn muốn xóa sinh viên
+    <strong th:text="${student.hoTen}"></strong>
+    (MSSV: <span th:text="${student.mssv}"></span>)?
+</div>
+
+<form th:action="@{/students/{id}/delete(id=${student.mssv})}" method="post">
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a th:href="@{/WEB-INF/views/students}" class="btn btn-secondary">Hủy</a>
+</form>
+</body>
+</html>

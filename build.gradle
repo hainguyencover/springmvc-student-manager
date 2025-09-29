@@ -23,15 +23,23 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     compileOnly('javax.servlet:javax.servlet-api:4.0.1')
-
     // Spring MVC
-    implementation 'org.springframework:spring-webmvc:5.3.39'
-
-    // Servlet API (Jakarta EE 8 tương ứng javax.*)
-    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
-
+    implementation ('org.springframework:spring-webmvc:5.3.39')
     // JSTL
-    implementation 'javax.servlet:jstl:1.2'
+    implementation ('javax.servlet:jstl:1.2')
+
+    // Thymeleaf - Template Engine cho Spring
+    implementation('org.thymeleaf:thymeleaf-spring5:3.1.2.RELEASE')
+    implementation('org.slf4j:slf4j-simple:2.0.13')
+
+    // Optional: Logging
+    // SLF4J
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    // Logback tương thích Java 8
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+
+    implementation('commons-fileupload:commons-fileupload:1.5')
+    implementation('commons-io:commons-io:2.16.1')
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")

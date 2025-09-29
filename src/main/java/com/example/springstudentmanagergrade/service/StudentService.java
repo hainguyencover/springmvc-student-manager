@@ -14,26 +14,26 @@ public class StudentService implements IStudentService {
 
     @PostConstruct
     public void initData() {
-        students.put("SV001", new Student("SV001", "Nguyen Van A", 9.2));
-        students.put("SV002", new Student("SV002", "Tran Thi B", 8.5));
-        students.put("SV003", new Student("SV003", "Le Van C", 7.8));
-        students.put("SV004", new Student("SV004", "Pham Thi D", 6.3));
-        students.put("SV005", new Student("SV005", "Hoang Van E", 4.9));
-        students.put("SV006", new Student("SV006", "Do Thi F", 7.1));
-        students.put("SV007", new Student("SV007", "Nguyen Van G", 8.9));
-        students.put("SV008", new Student("SV008", "Tran Van H", 5.5));
-        students.put("SV009", new Student("SV009", "Le Thi I", 9.8));
-        students.put("SV010", new Student("SV010", "Pham Van J", 6.7));
-        students.put("SV011", new Student("SV011", "Nguyen Van K", 7.4));
-        students.put("SV012", new Student("SV012", "Tran Thi L", 8.1));
-        students.put("SV013", new Student("SV013", "Le Van M", 5.9));
-        students.put("SV014", new Student("SV014", "Pham Thi N", 9.0));
-        students.put("SV015", new Student("SV015", "Hoang Van O", 4.5));
-        students.put("SV016", new Student("SV016", "Do Thi P", 6.8));
-        students.put("SV017", new Student("SV017", "Nguyen Van Q", 8.2));
-        students.put("SV018", new Student("SV018", "Tran Van R", 7.6));
-        students.put("SV019", new Student("SV019", "Le Thi S", 5.2));
-        students.put("SV020", new Student("SV020", "Pham Van T", 9.5));
+        students.put("SV001", new Student("SV001", "Nguyen Van A", 9.2, ""));
+        students.put("SV002", new Student("SV002", "Tran Thi B", 8.5, ""));
+        students.put("SV003", new Student("SV003", "Le Van C", 7.8, ""));
+        students.put("SV004", new Student("SV004", "Pham Thi D", 6.3, ""));
+        students.put("SV005", new Student("SV005", "Hoang Van E", 4.9, ""));
+        students.put("SV006", new Student("SV006", "Do Thi F", 7.1, ""));
+        students.put("SV007", new Student("SV007", "Nguyen Van G", 8.9, ""));
+        students.put("SV008", new Student("SV008", "Tran Van H", 5.5, ""));
+        students.put("SV009", new Student("SV009", "Le Thi I", 9.8, ""));
+        students.put("SV010", new Student("SV010", "Pham Van J", 6.7, ""));
+        students.put("SV011", new Student("SV011", "Nguyen Van K", 7.4, ""));
+        students.put("SV012", new Student("SV012", "Tran Thi L", 8.1, ""));
+        students.put("SV013", new Student("SV013", "Le Van M", 5.9, ""));
+        students.put("SV014", new Student("SV014", "Pham Thi N", 9.0, ""));
+        students.put("SV015", new Student("SV015", "Hoang Van O", 4.5, ""));
+        students.put("SV016", new Student("SV016", "Do Thi P", 6.8, ""));
+        students.put("SV017", new Student("SV017", "Nguyen Van Q", 8.2, ""));
+        students.put("SV018", new Student("SV018", "Tran Van R", 7.6, ""));
+        students.put("SV019", new Student("SV019", "Le Thi S", 5.2, ""));
+        students.put("SV020", new Student("SV020", "Pham Van T", 9.5, ""));
     }
 
     @Override
@@ -62,13 +62,26 @@ public class StudentService implements IStudentService {
         }
         list.sort(cmp);
 
-        // 3. pagination
+        // 3. pagination an toàn
         int total = list.size();
+        int totalPages = (int) Math.ceil((double) total / size);
+
+        // Nếu page vượt quá tổng số trang, chuyển về trang cuối
+        if (page > totalPages) {
+            page = totalPages;
+        }
+        if (page < 1) {
+            page = 1;
+        }
+
         int fromIndex = (page - 1) * size;
         int toIndex = Math.min(fromIndex + size, total);
-        if (fromIndex > total) {
+
+        // Nếu danh sách rỗng
+        if (fromIndex >= total) {
             return Collections.emptyList();
         }
+
         return list.subList(fromIndex, toIndex);
     }
 
