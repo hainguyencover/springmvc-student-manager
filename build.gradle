@@ -41,6 +41,11 @@ dependencies {
     implementation('commons-fileupload:commons-fileupload:1.5')
     implementation('commons-io:commons-io:2.16.1')
 
+    // Hibernate ORM 5.x (hỗ trợ tốt JDK 8)
+    implementation "org.hibernate:hibernate-core:5.4.33.Final"
+    // MySQL Connector 5.1 (ổn định cho JDK 8 và Hibernate 5)
+    implementation "mysql:mysql-connector-java:5.1.49"
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }

@@ -81,11 +81,9 @@
             <span class="badge bg-info text-dark" th:text="${s.xepLoai.label}"></span>
         </td>
         <td>
-            <a th:href="@{/students/{id}(id=${s.mssv})}" class="btn btn-sm btn-info">Chi tiết</a>
-            <a th:href="@{/students/{id}/edit(id=${s.mssv})}" class="btn btn-sm btn-warning">Sửa</a>
-            <form th:action="@{/students/{id}/delete(id=${s.mssv})}" method="post" style="display:inline">
-                <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-            </form>
+            <a th:href="@{/students/{id}(id=${s.id})}" class="btn btn-sm btn-info">Chi tiết</a>
+            <a th:href="@{/students/{id}/edit(id=${s.id})}" class="btn btn-sm btn-warning">Sửa</a>
+            <a th:href="@{/students/{id}/delete(id=${s.id})}" class="btn btn-sm btn-danger">Xóa</a>
         </td>
     </tr>
     <tr th:if="${#lists.isEmpty(students)}">

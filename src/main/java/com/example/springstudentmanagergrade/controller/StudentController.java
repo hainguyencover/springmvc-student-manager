@@ -80,9 +80,11 @@ public class StudentController {
         return mav;
     }
 
+
     @GetMapping("/{id}")
     public String detail(
-            @PathVariable("id") String id,
+//            @PathVariable("id") String id,
+            @PathVariable("id") int id,
             Model model,
             RedirectAttributes redirectAttributes) {
         Student s = studentService.findById(id); // gọi service để tìm sinh viên theo MSSV
@@ -92,7 +94,6 @@ public class StudentController {
             return "redirect:/students";
         }
         model.addAttribute("student", s);
-        // Chỉ cần trả về "students/student-detail" (KHÔNG có .jsp, KHÔNG redirect)
         return "students/detail";
     }
 
@@ -107,6 +108,7 @@ public class StudentController {
     public String doAdd(
             @ModelAttribute("studentForm") Student studentForm,
             BindingResult binding,
+            @RequestParam("avatarFile") MultipartFile avatarFile,
             RedirectAttributes ra,
             Model model) {
         // Validation (giữ nguyên code của bạn)
@@ -124,6 +126,7 @@ public class StudentController {
         if (binding.hasErrors()) {
             return "students/add";
         }
+
         // Xử lý upload file
         handleFileUpload(studentForm);
         studentService.create(studentForm);
@@ -132,7 +135,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable("id") String id,
+    public String showEditForm(@PathVariable("id") int id,
                                Model model,
                                RedirectAttributes ra) {
         Student s = studentService.findById(id);
@@ -145,11 +148,12 @@ public class StudentController {
     }
 
     @PostMapping("/{id}/edit")
-    public String doEdit(@PathVariable("id") String id,
+    public String doEdit(@PathVariable("id") int id,
                          @ModelAttribute("studentForm") Student studentForm,
                          BindingResult binding,
                          RedirectAttributes ra) {
-        if (!id.equals(studentForm.getMssv()) || !studentService.existsById(id)) {
+        Student existing = studentService.findById(id);
+        if (existing == null) {
             ra.addFlashAttribute("message", "Không tìm thấy sinh viên");
             return "redirect:/students";
         }
@@ -165,8 +169,6 @@ public class StudentController {
             return "students/edit";
         }
 
-        // update dữ liệu
-        Student existing = studentService.findById(id);
         // cập nhật thông tin cơ bản
         existing.setHoTen(studentForm.getHoTen());
         existing.setDiemTongKet(studentForm.getDiemTongKet());
@@ -184,11 +186,23 @@ public class StudentController {
         return "redirect:/students";
     }
 
+    @GetMapping("/{id}/delete")
+    public String showDeleteConfirm(@PathVariable("id") int id, Model model, RedirectAttributes ra) {
+        Student s = studentService.findById(id);
+        if (s == null) {
+            ra.addFlashAttribute("message", "Không tìm thấy sinh viên có ID = " + id);
+            return "redirect:/students";
+        }
+        model.addAttribute("student", s);
+        return "students/delete"; // trang giao diện confirm
+    }
+
     @PostMapping("/{id}/delete")
-    public String doDelete(@PathVariable("id") String id,
+    public String doDelete(@PathVariable("id") int id,
                            RedirectAttributes ra) {
-        if (!studentService.existsById(id)) {
-            ra.addFlashAttribute("message", "Không tìm thấy sinh viên có MSSV = " + id);
+        Student s = studentService.findById(id);
+        if (s == null) {
+            ra.addFlashAttribute("message", "Không tìm thấy sinh viên");
             return "redirect:/students";
         }
         studentService.delete(id);
