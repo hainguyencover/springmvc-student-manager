@@ -148,8 +148,7 @@ public class StudentController {
     public String doEdit(@PathVariable("id") String id,
                          @ModelAttribute("studentForm") Student studentForm,
                          BindingResult binding,
-                         RedirectAttributes ra,
-                         Model model) {
+                         RedirectAttributes ra) {
         if (!id.equals(studentForm.getMssv()) || !studentService.existsById(id)) {
             ra.addFlashAttribute("message", "Không tìm thấy sinh viên");
             return "redirect:/students";
@@ -168,15 +167,17 @@ public class StudentController {
 
         // update dữ liệu
         Student existing = studentService.findById(id);
-        // Xử lý upload file mới
-        handleFileUpload(studentForm);
+        // cập nhật thông tin cơ bản
         existing.setHoTen(studentForm.getHoTen());
         existing.setDiemTongKet(studentForm.getDiemTongKet());
-        // Nếu có file mới được upload, `studentForm.getAvatar()` sẽ có giá trị mới
-        // Nếu không, giữ lại avatar cũ
-        if (studentForm.getAvatar() != null && !studentForm.getAvatar().isEmpty()) {
-            existing.setAvatar(studentForm.getAvatar());
+
+        // xử lý file mới (nếu có)
+        MultipartFile avatarFile = studentForm.getAvatarFile();
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            String fileName = studentService.saveFile(avatarFile); // tự viết hàm saveFile() lưu file vào thư mục uploads
+            existing.setAvatar("/uploads/" + fileName);
         }
+
         studentService.update(existing);
 
         ra.addFlashAttribute("message", "Cập nhật sinh viên thành công!");

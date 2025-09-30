@@ -8,7 +8,7 @@
 <body class="container mt-4">
 <h2>Sửa sinh viên</h2>
 
-<form th:action="@{/students/{id}/edit(id=*{mssv})}" th:object="${studentForm}" method="post">
+<form th:action="@{/students/{id}/edit(id=*{mssv})}" th:object="${studentForm}" method="post" enctype="multipart/form-data">
 
     <div class="mb-3">
         <label class="form-label">MSSV</label>
@@ -27,7 +27,16 @@
         <p th:if="${#fields.hasErrors('diemTongKet')}" th:errors="*{diemTongKet}" class="text-danger"></p>
     </div>
 
-    <input type="hidden" th:field="*{avatar}" />
+    <!-- Hiện avatar cũ nếu có -->
+    <div class="mb-3">
+        <label class="form-label">Avatar hiện tại</label><br/>
+        <img th:if="*{avatar}" th:src="@{'/uploads/' + *{avatar}}" alt="avatar" style="width:120px"/>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Chọn avatar mới</label>
+        <input type="file" name="avatarFile" class="form-control"/>
+    </div>
 
     <button type="submit" class="btn btn-primary">Cập nhật</button>
     <a th:href="@{/students}" class="btn btn-secondary">Hủy</a>

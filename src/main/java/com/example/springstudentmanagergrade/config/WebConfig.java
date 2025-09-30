@@ -7,7 +7,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -22,16 +24,18 @@ import java.io.IOException;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.example.springstudentmanagergrade")
+@PropertySource("classpath:application.properties")
 public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
+
+    @Value("${upload.path}") // Đọc giá trị từ application.properties
+    private String uploadPath;
+
     private ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
-
-    @Value("${upload.path}") // Đọc giá trị từ application.properties
-    private String uploadPath;
 
     // --- Cấu hình Thymeleaf ---
     @Bean
@@ -75,5 +79,10 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         // URL /uploads/** sẽ được map tới thư mục vật lý trên ổ đĩa
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + uploadPath);
+    }
+
+    @Bean
+    public StandardServletMultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver();
     }
 }

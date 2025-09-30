@@ -1,9 +1,16 @@
 package com.example.springstudentmanagergrade.service;
 
 import com.example.springstudentmanagergrade.model.Student;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -11,6 +18,9 @@ import java.util.stream.Collectors;
 public class StudentService implements IStudentService {
 
     private final Map<String, Student> students = new HashMap<>();
+
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @PostConstruct
     public void initData() {
@@ -117,5 +127,17 @@ public class StudentService implements IStudentService {
     @Override
     public boolean existsById(String mssv) {
         return students.containsKey(mssv);
+    }
+
+    @Override
+    public String saveFile(MultipartFile file) {
+        try {
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(uploadPath, fileName);
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            return fileName;
+        } catch (IOException e) {
+            throw new RuntimeException("Lỗi upload file: " + e.getMessage());
+        }
     }
 }

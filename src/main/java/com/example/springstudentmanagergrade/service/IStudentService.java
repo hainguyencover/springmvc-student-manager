@@ -1,6 +1,7 @@
 package com.example.springstudentmanagergrade.service;
 
 import com.example.springstudentmanagergrade.model.Student;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,5 +19,7 @@ public interface IStudentService {
     boolean existsById(String id);
 
     long count(String q);
+
+    String saveFile(MultipartFile file);
 }
 
