@@ -71,7 +71,7 @@
     <tr th:each="s : ${students}">
         <td th:text="${s.mssv}"></td>
         <td>
-            <img th:if="${s.avatar}" th:src="@{${s.avatar}}"
+            <img th:if="${s.avatar}" th:src="@{'/uploads/' + ${s.avatar}}"
                  style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;" alt="Avatar"/>
             <span th:unless="${s.avatar}" class="text-muted">No photo</span>
         </td>

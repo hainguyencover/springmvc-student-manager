@@ -48,7 +48,7 @@ public class StudentController {
                 Files.copy(avatarFile.getInputStream(), filePath);
 
                 // Lưu đường dẫn web vào đối tượng student
-                student.setAvatar("/uploads/" + newFileName);
+                student.setAvatar(newFileName);
             } catch (IOException e) {
                 // In ra lỗi và bỏ qua, không set avatar nếu có lỗi
                 e.printStackTrace();
@@ -151,7 +151,8 @@ public class StudentController {
     public String doEdit(@PathVariable("id") int id,
                          @ModelAttribute("studentForm") Student studentForm,
                          BindingResult binding,
-                         RedirectAttributes ra) {
+                         RedirectAttributes ra,
+                         @RequestParam("avatarFile") MultipartFile avatarFile) {
         Student existing = studentService.findById(id);
         if (existing == null) {
             ra.addFlashAttribute("message", "Không tìm thấy sinh viên");
@@ -173,13 +174,16 @@ public class StudentController {
         existing.setHoTen(studentForm.getHoTen());
         existing.setDiemTongKet(studentForm.getDiemTongKet());
 
-        // xử lý file mới (nếu có)
-        MultipartFile avatarFile = studentForm.getAvatarFile();
-        if (avatarFile != null && !avatarFile.isEmpty()) {
-            String fileName = studentService.saveFile(avatarFile); // tự viết hàm saveFile() lưu file vào thư mục uploads
-            existing.setAvatar("/uploads/" + fileName);
+//        // xử lý file mới (nếu có)
+//        MultipartFile avatarFile = studentForm.getAvatarFile();
+//        if (avatarFile != null && !avatarFile.isEmpty()) {
+//            String fileName = studentService.saveFile(avatarFile); // tự viết hàm saveFile() lưu file vào thư mục uploads
+//            existing.setAvatar("/uploads/" + fileName);
+//        }
+        if (!avatarFile.isEmpty()) {
+            String fileName = studentService.saveFile(avatarFile);   // trả về newFileName
+            existing.setAvatar(fileName);                 // cập nhật vào object đang lưu
         }
-
         studentService.update(existing);
 
         ra.addFlashAttribute("message", "Cập nhật sinh viên thành công!");

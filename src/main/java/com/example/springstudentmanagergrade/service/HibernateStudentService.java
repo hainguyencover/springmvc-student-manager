@@ -209,7 +209,7 @@ public class HibernateStudentService implements IStudentService {
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
             // trả về path để lưu trong DB (đường dẫn web)
-            return "/uploads/" + newFileName;
+            return newFileName;
         } catch (IOException e) {
             throw new RuntimeException("Lỗi upload file: " + e.getMessage(), e);
         }

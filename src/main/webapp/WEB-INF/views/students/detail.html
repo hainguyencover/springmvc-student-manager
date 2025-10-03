@@ -14,7 +14,7 @@
 <div class="card">
     <div class="row g-0">
         <div class="col-md-3 text-center p-3">
-            <img th:if="${student.avatar}" th:src="@{${student.avatar}}"
+            <img th:if="${student.avatar}" th:src="@{'/uploads/' + ${student.avatar}}"
                  style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;"
                  class="img-fluid rounded-start" alt="Avatar"/>
             <div th:unless="${student.avatar}" class="d-flex align-items-center justify-content-center bg-light"
